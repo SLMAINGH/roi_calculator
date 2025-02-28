@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="B2B Marketing ROI Calculator - Calculate your marketing return on investment with our easy-to-use tool">
+    <meta name="keywords" content="ROI calculator, B2B marketing, sales pipeline, revenue forecasting">
+    <meta name="author" content="B2B Marketing ROI Calculator">
+    <title>B2B Marketing ROI Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --primary: #2D3047;
+            --secondary: #419D78;
+            --accent: #E0A458;
+            --neutral: #FCFCFC;
+            --highlight: #D85A7F;
+            --primary-light: #3d4161;
+            --secondary-light: #4fb989;
+            --accent-light: #e6b67a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--neutral);
+            color: var(--primary);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: var(--primary);
+            color: var(--neutral);
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neutral);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+        
+        .nav-links {
+            display: flex;
+        }
+        
+        .nav-links a {
+            color: var(--neutral);
+            text-decoration: none;
+            margin-left: 30px;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--neutral);
+            padding: 150px 0 100px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            animation: fadeIn 1.5s;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--accent);
+            color: var(--primary);
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            animation: fadeInUp 2s;
+        }
+        
+        .cta-button:hover {
+            background-color: var(--accent-light);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Calculator Section */
+        .calculator-section {
+            padding: 100px 0;
+            background-color: var(--neutral);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .section-title p {
+            color: var(--primary-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Form Styles */
+        .calculator-form {
+            padding: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(65, 157, 120, 0.2);
+        }
+        
+        .input-prefix {
+            position: relative;
+        }
+        
+        .input-prefix input {
+            padding-left: 30px;
+        }
+        
+        .input-prefix::before {
+            content: "$";
+            position: absolute;
+            left: 15px;
+            top: 13px;
+            color: #888;
+        }
+        
+        .input-suffix {
+            position: relative;
+        }
+        
+        .input-suffix input {
+            padding-right: 30px;
+        }
+        
+        .input-suffix::after {
+            content: "%";
+            position: absolute;
+            right: 15px;
+            top: 13px;
+            color: #888;
+        }
+        
+        /* Results Styles */
+        .calculator-results {
+            background-color: var(--secondary);
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .results-header {
+            margin-bottom: 30px;
+        }
+        
+        .results-header h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .result-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .result-card h4 i {
+            margin-right: 10px;
+        }
+        
+        .result-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .chart-container {
+            flex-grow: 1;
+            min-height: 250px;
+            position: relative;
+            margin-top: 20px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .secondary-button {
+            background-color: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .secondary-button i {
+            margin-right: 8px;
+        }
+        
+        .secondary-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: var(--neutral);
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        
+        .footer-column p {
+            margin-bottom: 15px;
+            color: rgba(252, 252, 252, 0.8);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: rgba(252, 252, 252, 0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--accent);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(252, 252, 252, 0.1);
+            color: var(--neutral);
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--accent);
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(252, 252, 252, 0.1);
+            color: rgba(252, 252, 252, 0.6);
+        }
+        
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(252, 252, 252, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .loading-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* Animation Classes */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Tooltip Styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            color: var(--accent);
+            cursor: pointer;
+        }
+        
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 250px;
+            background-color: var(--primary);
+            color: var(--neutral);
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+        
+        .tooltip .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--primary) transparent transparent transparent;
+        }
+        
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .calculator-form, .calculator-results {
+                padding: 30px;
+            }
+            
+            .result-value {
+                font-size: 1.7rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .calculator-form, .calculator-results {
+                padding: 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .secondary-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Animation -->
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    <span>ROI Calculator</span>
+                </a>
+                <div class="nav-links">
+                    <a href="#calculator">Calculator</a>
+                    <a href="#about">How It Works</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Calculate Your B2B Marketing ROI</h1>
+            <p>See the real impact of your marketing efforts with our specialized calculator designed for B2B companies.</p>
+            <a href="#calculator" class="cta-button">Try Calculator</a>
+        </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section id="calculator" class="calculator-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Marketing ROI Calculator</h2>
+                <p>Input your marketing metrics to calculate potential pipeline value, forecasted revenue, and ROI.</p>
+            </div>
+            
+            <div class="calculator-container">
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="acv">
+                            ACV (Annual Contract Value) ($)
+                            <span class="tooltip"><i class="fas fa-info-circle"></i>
+                                <span class="tooltip-text">The average annual revenue expected from each customer contract.</span>
+                            </span>
+                        </label>
+                        <div class="input-prefix">
+                            <input type="number" id="acv" class="form-control" placeholder="e.g., 10000" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sql">
+                            Liczba wygenerowanych SQL (Sales Qualified Leads)
+                            <span class="tooltip"><i class="fas fa-info-circle"></i>
+                                <span class="tooltip-text">Number of qualified leads that your marketing efforts are expected to generate.</span>
+                            </span>
+                        </label>
+                        <input type="number" id="sql" class="form-control" placeholder="e.g., 50" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sql-to-opp">
+                            Konwersja SQL → Opportunity (%)
+                            <span class="tooltip"><i class="fas fa-info-circle"></i>
+                                <span class="tooltip-text">The percentage of qualified leads that convert to actual sales opportunities.</span>
+                            </span>
+                        </label>
+                        <div class="input-suffix">
+                            <input type="number" id="sql-to-opp" class="form-control" placeholder="e.g., 30" min="0" max="100">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="opp-to-win">
+                            Konwersja Opportunity → Closed Won (%)
+                            <span class="tooltip"><i class="fas fa-info-circle"></i>
+                                <span class="tooltip-text">The percentage of opportunities that convert to closed deals.</span>
+                            </span>
+                        </label>
+                        <div class="input-suffix">
+                            <input type="number" id="opp-to-win" class="form-control" placeholder="e.g., 20" min="0" max="100">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="retainer">
+                            Miesięczny retainer ($)
+                            <span class="tooltip"><i class="fas fa-info-circle"></i>
+                                <span class="tooltip-text">The monthly fee paid for marketing services.</span>
+                            </span>
+                        </label>
+                        <div class="input-prefix">
+                            <input type="number" id="retainer" class="form-control" placeholder="e.g., 5000" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="duration">
+                            Czas trwania współpracy (miesiące)
+                            <span class="tooltip"><i class="fas fa-info-circle"></i>
+                                <span class="tooltip-text">The duration of the marketing engagement in months.</span>
+                            </span>
+                        </label>
+                        <input type="number" id="duration" class="form-control" placeholder="e.g., 12" min="1">
+                    </div>
+                </div>
+                
+                <div class="calculator-results">
+                    <div class="results-header">
+                        <h3>Your Results</h3>
+                        <p>See the projected impact of your marketing investment:</p>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h4><i class="fas fa-funnel-dollar"></i> Total Pipeline Value</h4>
+                        <div class="result-value" id="pipeline-value">$0</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h4><i class="fas fa-chart-line"></i> Forecasted Revenue</h4>
+                        <div class="result-value" id="forecasted-revenue">$0</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h4><i class="fas fa-percentage"></i> ROI</h4>
+                        <div class="result-value" id="roi-value">0%</div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="results-chart"></canvas>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="secondary-button" id="share-results">
+                            <i class="fas fa-share-alt"></i> Share Results
+                        </button>
+                        <button class="secondary-button" id="print-results">
+                            <i class="fas fa-print"></i> Print Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>About Us</h3>
+                    <p>We help B2B companies calculate and maximize their marketing return on investment with specialized tools and services.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#calculator">Calculator</a></li>
+                        <li><a href="#about">How It Works</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-envelope"></i> info@roicalculator.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Marketing St, Business City</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 B2B Marketing ROI Calculator. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Loading Animation
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.querySelector('.loading-overlay').classList.add('loading-hidden');
+            }, 1000);
+        });
+        
+        // Initialize Chart
+        let resultsChart;
+        
+        function initChart() {
+            const ctx = document.getElementById('results-chart').getContext('2d');
+            
+            resultsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Investment', 'Pipeline Value', 'Revenue'],
+                    datasets: [{
+                        label: 'ROI Analysis',
+                        data: [0, 0, 0],
+                        backgroundColor: [
+                            'rgba(255, 255, 255, 0.2)',
+                            'rgba(224, 164, 88, 0.7)',
+                            'rgba(216, 90, 127, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 255, 255, 0.5)',
+                            'rgba(224, 164, 88, 1)',
+                            'rgba(216, 90, 127, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Calculator Logic
+        document.addEventListener('DOMContentLoaded', function() {
+            initChart();
+            
+            // Get form elements
+            const acvInput = document.getElementById('acv');
+            const sqlInput = document.getElementById('sql');
+            const sqlToOppInput = document.getElementById('sql-to-opp');
+            const oppToWinInput = document.getElementById('opp-to-win');
+            const retainerInput = document.getElementById('retainer');
+            const durationInput = document.getElementById('duration');
+            
+            // Get result elements
+            const pipelineValueEl = document.getElementById('pipeline-value');
+            const forecastedRevenueEl = document.getElementById('forecasted-revenue');
+            const roiValueEl = document.getElementById('roi-value');
+            
+            // Add input event listeners to all form fields
+            const formInputs = [acvInput, sqlInput, sqlToOppInput, oppToWinInput, retainerInput, durationInput];
+            
+            formInputs.forEach(input => {
+                input.addEventListener('input', calculateResults);
+                
+                // Add animation classes when focused
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('animate__animated', 'animate__pulse');
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('animate__animated', 'animate__pulse');
+                });
+            });
+            
+            // Function to calculate results
+            function calculateResults() {
+                // Get input values
+                const acv = parseFloat(acvInput.value) || 0;
+                const sql = parseFloat(sqlInput.value) || 0;
+                const sqlToOpp = parseFloat(sqlToOppInput.value) || 0;
+                const oppToWin = parseFloat(oppToWinInput.value) || 0;
+                const retainer = parseFloat(retainerInput.value) || 0;
+                const duration = parseFloat(durationInput.value) || 0;
+                
+                // Convert percentages to decimals
+                const sqlToOppRate = sqlToOpp / 100;
+                const oppToWinRate = oppToWin / 100;
+                
+                // Calculate metrics
+                const pipelineValue = acv * (sql * sqlToOppRate);
+                const forecastedRevenue = acv * (sql * sqlToOppRate * oppToWinRate);
+                const totalCost = retainer * duration;
+                
+                let roi = 0;
+                if (totalCost > 0) {
+                    roi = ((forecastedRevenue - totalCost) / totalCost) * 100;
+                }
+                
+                // Format and display results
+                pipelineValueEl.textContent = formatCurrency(pipelineValue);
+                forecastedRevenueEl.textContent = formatCurrency(forecastedRevenue);
+                roiValueEl.textContent = formatPercentage(roi);
+                
+                // Change color based on ROI
+                if (roi < 0) {
+                    roiValueEl.style.color = 'var(--highlight)';
+                } else if (roi > 100) {
+                    roiValueEl.style.color = 'var(--accent)';
+                } else {
+                    roiValueEl.style.color = 'white';
+                }
+                
+                // Update chart
+                updateChart(totalCost, pipelineValue, forecastedRevenue);
+                
+                // Add animation to results
+                animateResults();
+            }
+            
+            // Helper function to format currency
+            function formatCurrency(value) {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    maximumFractionDigits: 0
+                }).format(value);
+            }
+            
+            // Helper function to format percentage
+            function formatPercentage(value) {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'percent',
+                    maximumFractionDigits: 1,
+                    signDisplay: 'exceptZero'
+                }).format(value / 100);
+            }
+            
+            // Function to update chart
+            function updateChart(cost, pipeline, revenue) {
+                resultsChart.data.datasets[0].data = [cost, pipeline, revenue];
+                resultsChart.update();
+            }
+            
+            // Function to animate results
+            function animateResults() {
+                const resultCards = document.querySelectorAll('.result-card');
+                
+                resultCards.forEach((card, index) => {
+                    // Remove existing animation classes
+                    card.classList.remove('animate__animated', 'animate__fadeInUp');
+                    
+                    // Trigger reflow
+                    void card.offsetWidth;
+                    
+                    // Add animation with delay based on index
+                    setTimeout(() => {
+                        card.classList.add('animate__animated', 'animate__fadeInUp');
+                    }, index * 100);
+                });
+            }
+            
+            // Share results functionality
+            document.getElementById('share-results').addEventListener('click', function() {
+                const acv = parseFloat(acvInput.value) || 0;
+                const sql = parseFloat(sqlInput.value) || 0;
+                const sqlToOpp = parseFloat(sqlToOppInput.value) || 0;
+                const oppToWin = parseFloat(oppToWinInput.value) || 0;
+                const retainer = parseFloat(retainerInput.value) || 0;
+                const duration = parseFloat(durationInput.value) || 0;
+                
+                // Create URL with query parameters
+                const baseUrl = window.location.href.split('?')[0];
+                const queryParams = new URLSearchParams({
+                    acv: acv,
+                    sql: sql,
+                    sqlToOpp: sqlToOpp,
+                    oppToWin: oppToWin,
+                    retainer: retainer,
+                    duration: duration
+                }).toString();
+                
+                const shareUrl = `${baseUrl}?${queryParams}`;
+                
+                // Create a temporary input to copy the URL
+                const tempInput = document.createElement('input');
+                document.body.appendChild(tempInput);
+                tempInput.value = shareUrl;
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                
+                // Show confirmation toast
+                showToast('Results link copied to clipboard!');
+            });
+            
+            // Print results functionality
+            document.getElementById('print-results').addEventListener('click', function() {
+                // Calculate results to ensure they're up to date
+                calculateResults();
+                
+                // Create a printable version
+                const printWindow = window.open('', '_blank');
+                
+                // Get the calculated values
+                const acv = parseFloat(acvInput.value) || 0;
+                const sql = parseFloat(sqlInput.value) || 0;
+                const sqlToOpp = parseFloat(sqlToOppInput.value) || 0;
+                const oppToWin = parseFloat(oppToWinInput.value) || 0;
+                const retainer = parseFloat(retainerInput.value) || 0;
+                const duration = parseFloat(durationInput.value) || 0;
+                
+                // Convert percentages to decimals
+                const sqlToOppRate = sqlToOpp / 100;
+                const oppToWinRate = oppToWin / 100;
+                
+                // Calculate metrics
+                const pipelineValue = acv * (sql * sqlToOppRate);
+                const forecastedRevenue = acv * (sql * sqlToOppRate * oppToWinRate);
+                const totalCost = retainer * duration;
+                const roi = totalCost > 0 ? ((forecastedRevenue - totalCost) / totalCost) * 100 : 0;
+                
+                // Create HTML content for the print window
+                printWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>ROI Calculator Results</title>
+                        <style>
+                            body {
+                                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                                padding: 40px;
+                                color: #2D3047;
+                                line-height: 1.6;
+                            }
+                            .header {
+                                display: flex;
+                                align-items: center;
+                                margin-bottom: 30px;
+                            }
+                            .header h1 {
+                                font-size: 24px;
+                                margin-left: 10px;
+                            }
+                            .divider {
+                                margin: 20px 0;
+                                border-top: 1px solid #eee;
+                            }
+                            .results-section {
+                                margin-top: 20px;
+                            }
+                            .result-row {
+                                display: flex;
+                                justify-content: space-between;
+                                margin-bottom: 10px;
+                                padding: 15px;
+                                background-color: #f9f9f9;
+                                border-radius: 5px;
+                            }
+                            .result-label {
+                                font-weight: bold;
+                            }
+                            .result-value {
+                                font-size: 18px;
+                            }
+                            .inputs-section {
+                                margin-top: 30px;
+                                border-top: 1px solid #eee;
+                                padding-top: 20px;
+                            }
+                            .input-row {
+                                display: flex;
+                                justify-content: space-between;
+                                margin-bottom: 10px;
+                            }
+                            .input-label {
+                                color: #666;
+                            }
+                            .footer {
+                                margin-top: 40px;
+                                text-align: center;
+                                font-size: 12px;
+                                color: #999;
+                            }
+                            .highlight {
+                                color: ${roi >= 0 ? '#419D78' : '#D85A7F'};
+                                font-weight: bold;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="header">
+                            <h1>B2B Marketing ROI Calculator Results</h1>
+                        </div>
+                        
+                        <p>Based on your inputs, here are the projected marketing ROI metrics:</p>
+                        
+                        <div class="results-section">
+                            <div class="result-row">
+                                <span class="result-label">Total Pipeline Value:</span>
+                                <span class="result-value">${formatCurrency(pipelineValue)}</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Forecasted Revenue:</span>
+                                <span class="result-value">${formatCurrency(forecastedRevenue)}</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Total Investment:</span>
+                                <span class="result-value">${formatCurrency(totalCost)}</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Return on Investment (ROI):</span>
+                                <span class="result-value highlight">${formatPercentage(roi)}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="inputs-section">
+                            <h3>Input Parameters</h3>
+                            <div class="input-row">
+                                <span class="input-label">ACV (Annual Contract Value):</span>
+                                <span>${formatCurrency(acv)}</span>
+                            </div>
+                            <div class="input-row">
+                                <span class="input-label">Liczba wygenerowanych SQL:</span>
+                                <span>${sql}</span>
+                            </div>
+                            <div class="input-row">
+                                <span class="input-label">Konwersja SQL → Opportunity:</span>
+                                <span>${sqlToOpp}%</span>
+                            </div>
+                            <div class="input-row">
+                                <span class="input-label">Konwersja Opportunity → Closed Won:</span>
+                                <span>${oppToWin}%</span>
+                            </div>
+                            <div class="input-row">
+                                <span class="input-label">Miesięczny retainer:</span>
+                                <span>${formatCurrency(retainer)}</span>
+                            </div>
+                            <div class="input-row">
+                                <span class="input-label">Czas trwania współpracy:</span>
+                                <span>${duration} ${duration === 1 ? 'miesiąc' : 'miesięcy'}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="footer">
+                            <p>Generated on ${new Date().toLocaleDateString()} by B2B Marketing ROI Calculator</p>
+                        </div>
+                    </body>
+                    </html>
+                `);
+                
+                printWindow.document.close();
+                
+                // Wait for resources to load before printing
+                setTimeout(() => {
+                    printWindow.print();
+                }, 500);
+            });
+            
+            // Function to show a toast notification
+            function showToast(message) {
+                // Create toast element if it doesn't exist
+                let toast = document.getElementById('toast-notification');
+                
+                if (!toast) {
+                    toast = document.createElement('div');
+                    toast.id = 'toast-notification';
+                    toast.style.cssText = `
+                        position: fixed;
+                        bottom: 30px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        background-color: var(--primary);
+                        color: white;
+                        padding: 16px 24px;
+                        border-radius: 8px;
+                        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                        z-index: 1000;
+                        opacity: 0;
+                        transition: opacity 0.3s ease;
+                        display: flex;
+                        align-items: center;
+                    `;
+                    document.body.appendChild(toast);
+                }
+                
+                // Add success icon
+                toast.innerHTML = `<i class="fas fa-check-circle" style="margin-right: 10px; color: var(--accent);"></i> ${message}`;
+                
+                // Show the toast
+                toast.style.opacity = '1';
+                
+                // Hide after 3 seconds
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                }, 3000);
+            }
+            
+            // Check URL for shared parameters
+            function loadSharedResults() {
+                const urlParams = new URLSearchParams(window.location.search);
+                
+                if (urlParams.has('acv')) {
+                    acvInput.value = urlParams.get('acv');
+                    sqlInput.value = urlParams.get('sql');
+                    sqlToOppInput.value = urlParams.get('sqlToOpp');
+                    oppToWinInput.value = urlParams.get('oppToWin');
+                    retainerInput.value = urlParams.get('retainer');
+                    durationInput.value = urlParams.get('duration');
+                    
+                    // Calculate results with the shared values
+                    calculateResults();
+                    
+                    // Scroll to calculator section
+                    document.getElementById('calculator').scrollIntoView();
+                }
+            }
+            
+            // Load shared results when the page is ready
+            loadSharedResults();
+        });
+    </script>
+</body>
+</html>
